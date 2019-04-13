@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>match</title>
+    <link rel="icon" href="./images/i.ico" type="img/x-ico" />
+    <link href="https://cdn.bootcss.com/normalize/8.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <link rel="stylesheet" href="./stylesheets/index.css">
+    <link rel="stylesheet" href="./stylesheets/match.css">
+    <link rel="stylesheet" href="./stylesheets/loading.css">
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.js"></script>
+</head>
+<body>
+    <!-- main-nav-area -->
+    <div id="main-nav-area">
+        <!--nav-area-black-->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12" id="nav-area-black">
+                    <div id="user-panel">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        <span id="username" v-on:click="user_info">{{ username }}</span>
+                    </div>
+                    <div id="exit-panel">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true" v-on:click="exit"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="match">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12" id="match-header">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4 text-center">
+                        <img :src="'./images/teams/' + home_name +'.png'" alt="logo">
+                        <span>{{ home_name }}</span>
+                        <span style="font-size: 25px; font-weight: 800;">{{ home_points }}</span>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4 text-center">
+                        <span style="font-size: 25px; font-weight: 800;">{{ away_points }}</span>
+                        <span>{{ away_name }}</span>
+                        <img :src="'./images/teams/' + away_name +'.png'" alt="logo">
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12" id="display-compare-results">
+                    <div class="col-md-2 text-center clearfix">
+                        <img v-bind:src="'./images/players/' + home_best_player.name +'.png'" alt="logo">
+                    </div>
+                    <div class="col-md-3">
+                        <ul class="A-datas-display">
+                            <li v-for="(data, index) in home_best_player" class="clearfix">
+                                <em class="strip pull-right" 
+                                    v-bind:style="{width: Number(data)/max*100+'%', backgroundColor: home_player_comp[index]?'#94c4f9':'#ededed'}"
+                                ></em>
+                                <span class="pull-right">{{ data }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <ul>
+                            <li><h4>球员</h4></li>
+                            <li><h4>得分</h4></li>
+                            <li><h4>助攻</h4></li>
+                            <li><h4>篮板</h4></li>
+                            <li><h4>抢断</h4></li>
+                            <li><h4>盖帽</h4></li>
+                            <li><h4>per</h4></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3" class="strip">
+                        <ul class="B-datas-display">
+                            <li v-for="(data, index) in away_best_player" class="clearfix">
+                                <em class="strip pull-left" 
+                                    v-bind:style="{width: Number(data)/max*100+'%', backgroundColor: away_player_comp[index]?'#94c4f9':'#ededed'}"
+                                ></em>
+                                <span class="pull-left">{{ data }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2 text-center clearfix">
+                        <img v-bind:src="'./images/players/' + away_best_player.name +'.png'" alt="logo">
+                        <!-- <p>{{ away_best_player.name }}</p> -->
+                    </div>
+                </div>  
+            </div>
+            <hr>   
+            <div class="row">
+                <div class="col-md-12 team">
+                    <div class="col-md-6 col-md-push-3 text-center">
+                        <a href="javascript:void(0);" @click="flag=true" class="btn btn-default" 
+                            :style="{backgroundColor: flag?'#31b0d5':''}">
+                            {{ home_name }}
+                        </a>
+                        <a href="javascript:void(0);" @click="flag=false" class="btn btn-default"
+                            :style="{backgroundColor: !flag?'#31b0d5':''}">
+                            {{ away_name }}
+                        </a>
+                    </div>
+                </div>
+                <div v-if="flag" class="col-md-12">
+                    <match-player-card
+                        v-for="player in home_team"
+                        v-if="player.name!='统计' && player.name!='命中率' && player.minutes > 0"
+                        :key="player.name"
+                        :player="player"
+                    >
+                    </match-player-card>
+                </div>
+                <div v-else class="col-md-12" >
+                    <match-player-card
+                        v-for="player in away_team"
+                        v-if="player.name!='统计' && player.name!='命中率' && player.minutes > 0" 
+                        :key="player.name"
+                        :player="player"
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function disappear(id){
+            $(id).css('display', 'none');
+        }
+    </script>
+    <script src="./javascripts/match.js"></script>
+</body>
+</html>

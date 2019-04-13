@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>player</title>
+    <link rel="icon" href="./images/i.ico" type="img/x-ico" />
+    <link href="https://cdn.bootcss.com/normalize/8.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <link rel="stylesheet" href="./stylesheets/index.css">
+    <link rel="stylesheet" href="./stylesheets/player.css">
+    <link rel="stylesheet" href="./stylesheets/loading.css">
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.js"></script>
+</head>
+<body>
+    <!-- main-nav-area -->
+    <div id="main-nav-area">
+        <!--nav-area-black-->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12" id="nav-area-black">
+                    <div id="user-panel">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        <span id="username">{{ username }}</span>
+                    </div>
+                    <div id="exit-panel">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- player-info -->
+    <div id="player">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12"><h3>{{ check_player_name }}</h3></div>
+                <div class="col-md-12" style="padding: 0px;">
+                    <div class="col-md-3" style="padding: 0px;">
+                        <div class="col-md-12" style="padding: 50px 5px;">
+                            <img v-bind:src="'./images/players/'+ check_player_name + '.png'" alt="here is a logo">
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="padding: 50px 0px;">
+                        <ul class="three-data">
+                            <li>场均得分：<span>{{ player_data_rank[1][1] }}</span></li>
+                            <li>场均助攻：<span>{{ player_data_rank[2][1] }}</span></li>
+                            <li>场均篮板：<span>{{ player_data_rank[3][1] }}</span></li>
+                        </ul>
+                    </div>
+                    <!-- average -->
+                    <div class="col-md-6">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr v-for="player in player_data_rank">
+                                    <td v-for="p in player">{{ p }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="padding: 0 10px;">
+                    <h3>常规赛</h3>
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            <tr v-for="player in player_data_career_regular">
+                                <td v-for="p in player">{{ p }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3>季后赛</h3>
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            <tr v-for="player in player_data_career_off">
+                                <td v-for="p in player">{{ p }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./javascripts/player.js"></script>
+    <script>
+        document.onreadystatechange=function(){
+            if(document.readyState=="complete"){
+                $(".loading").fadeOut();
+            }
+        } 
+    </script>
+</body>
+</html>

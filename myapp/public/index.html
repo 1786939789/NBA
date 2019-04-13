@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HOME</title>
+    <link rel="icon" href="./images/i.ico" type="img/x-ico" />
+    <link href="https://cdn.bootcss.com/normalize/8.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <link rel="stylesheet" href="./stylesheets/index.css">
+    <link rel="stylesheet" href="./stylesheets/loading.css">
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./javascripts/resource.js"></script>
+</head>
+<body>
+    <div id="main-nav-area">
+        <!--nav-area-black-->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12" id="nav-area-black">
+                    <div id="exit-panel">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true" v-on:click="exit"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--nav-area-->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12" id="nav-area">
+                    <ul class="col-md-5 col-sm-5 col-xs-5 text-center">
+                        <li><a href="javascript:void(0);">赛程</a></li>
+                        <li><a href="javascript:void(0);">球星</a></li>
+                    </ul>
+                    <div class="col-md-2 col-sm-2 col-xs-2" id="triangle">
+                    </div>
+                    <ul class="col-md-5 col-sm-5 col-xs-5 text-center">
+                        <li><a href="javascript:void(0);">比试</a></li>
+                        <li><a href="javascript:void(0);">排名</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main-content">
+        <!-- schedule -->
+        <div id="schedule" style="display: block;">
+            <div class="container" >
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-4"><h3>2018-2019赛季NBA赛程</h3></div>
+                        </div>
+                        <schedule-component
+                            v-for="schedule in schedules"
+                            :key="schedule.date"
+                            :date="schedule.date"
+                            :datas="schedule.datas"
+                        >
+                        </schedule-component>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- star_card rank -->
+        <div id="star-card" style="display: none;">
+            <div class="container">
+                <ul class="select-star-card-rank">
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==0}">星级</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==1}">得分</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==2}">两分</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==3}">三分</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==4}">中投</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==5}">远投</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==6}">防守</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==7}">前场</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==8}">篮板</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==9}">抢断</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==10}">盖帽</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==11}">失误</a></li>|
+                    <li><a @click="select_star_card_rank($event)" href="javascript:void(0);" :class="{active:index==12}">罚球</a></li>
+                </ul>
+                <div class="row">
+                    <star-card
+                        v-for="star in stars"
+                        :key="star.name"
+                        :star="star"
+                        :check="true"
+                    >
+                    </star-card>
+                </div>
+            </div>
+        </div>
+        <!-- competition -->
+        <div id="competition" style="display: none;">
+            <div class="container">
+                <!-- scores -->
+                <div class="row">
+                    <div class="col-md-12 competition-title">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-4 text-center">
+                            <span>主队</span>
+                            <span>
+                                {{ scores_own[0]+scores_own[1]+scores_own[2]+scores_own[3] }}
+                            </span>
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4 text-center">
+                            <span>
+                                {{ scores_opp[0]+scores_opp[1]+scores_opp[2]+scores_opp[3] }}
+                            </span>
+                            <span>客队</span>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+                <hr>
+                <!-- 单节scores -->
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="col-md-3 star-data-panel" v-for="s in stars_competition_own">
+                            <img :src="'images/small/'+s.name+'.jpg'"><br>
+                            <span>得分：{{ s.scores }}</span><br>
+                            <span>中投：{{ s.mid_hits + '/' + s.mid_shots }}</span><br>
+                            <span>远投：{{ s.long_hits + '/' + s.long_shots }}</span><br>
+                            <span>防守：{{ s.defend }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-2" style="margin-top: 15px;">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td>一</td>
+                                    <td>二</td>
+                                    <td>三</td>
+                                    <td>四</td>
+                                </tr>
+                                <tr>
+                                    <td>主</td>
+                                    <td v-for="score_own in scores_own">{{score_own}}</td>
+                                </tr>
+                                <tr>
+                                    <td>客</td>
+                                    <td v-for="score_opp in scores_opp">{{score_opp}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="col-md-3 star-data-panel" v-for="s in stars_competition_opp">
+                            <img :src="'images/small/'+s.name+'.jpg'"><br>
+                            <span>得分：{{ s.scores }}</span><br>
+                            <span>中投：{{ s.mid_hits + '/' + s.mid_shots }}</span><br>
+                            <span>远投：{{ s.long_hits + '/' + s.long_shots }}</span><br>
+                            <span>防守：{{ s.defend }}</span>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <!-- content -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <star-card :star="star_own" :check="false"></star-card>
+                         <div class="col-md-6">
+                            <div class="col-md-12">
+                                <div class="competition-panel">
+                                    <ul>
+                                        <li v-for="c in competition_content" class="clearfix">
+                                            <div class="part">{{ '第' + sequence + '节' }}</div>
+                                            {{ c }}
+                                            <div class="scores-show">
+                                                {{ (scores_own[0]+scores_own[1]+scores_own[2]+scores_own[3])
+                                                    +'-'+(scores_opp[0]+scores_opp[1]+scores_opp[2]+scores_opp[3]) 
+                                                }}
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                         </div>
+                        <star-card :star="star_opp" :check="false"></star-card>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="select">
+                            <span class="placeholder">请选择</span>
+                            <ul>
+                                <li v-for="star in stars_own" @click="select_star($event)" v-if="star.use == 0">
+                                    <img :src="'images/players/'+ star.name +'.png'">{{ star.name }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- start -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-4 col-md-push-4">
+                            <button @click="start_competition($event)" id="start-competition" class="btn btn-info col-md-6 col-md-push-3">
+                                {{ '开始第'+(sequence+1)+'节' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- rank -->
+        <div id="rank" style="display: none;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0;">
+                            <div class="col-md-12 col-sm-12 col-xs-12" id="rank-head">
+                                <div class="col-md-4"><h3>2018-2019赛季常规赛排名</h3></div>
+                                <div class="col-md-1 text-center" id="team-select" v-on:click="is_team=true">
+                                    <a  href="javascript: void(0);">球队</a>    
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="title">
+                            <img src="images/east.png">
+                            <span>东部联盟</span>
+                        </div>
+                        <table class="table table-hover">
+                            <tr v-for="(team,i) in team_east" 
+                                :style="{backgroundColor: team[0]=='排名'?'#032f4f':'white', color: team[0]=='排名'?'white':'black'}">
+                                <td v-for="(t, j) in team" :class="{rankEastBg: j==0 && i>0 && i<=9}">
+                                    <img :src="'images/teams_logo/'+team[j]+'.png'" v-if="j==1 && i>0" class="team-logo">
+                                    {{ t }}
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="title">
+                                <img src="images/west.png">
+                                <span>西部联盟</span>
+                            </div>
+                        <table class="table table-hover">
+                            <tr v-for="(team,i) in team_west"
+                                :style="{backgroundColor: team[0]=='排名'?'#032f4f':'white', color: team[0]=='排名'?'white':'black'}">
+                                <td v-for="(t, j) in team" :class="{rankWestBg: j==0 && i>0 && i<=9}">
+                                    <img :src="'images/teams_logo/'+team[j]+'.png'" v-if="j==1 && i>0" class="team-logo">
+                                    {{ t }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div id="footer">
+        <p>CopyRight 2019 JB51.Net Inc All Rights Reserved.李宏 版权所有</p>
+    </div> -->
+    <script>
+        var bus = new Vue();
+        Vue.prototype.bus = bus;
+    </script>
+    <script src="./javascripts/style.js"></script>
+    <script src="./javascripts/index.js"></script>
+    <script>
+        $('.select').on('click', '.placeholder', function(e) {
+            var parent = $(this).closest('.select');
+            if (!parent.hasClass('is-open')) {
+                parent.addClass('is-open');
+                $('.select.is-open').not(parent).removeClass('is-open');
+            } else {
+                parent.removeClass('is-open');
+            }
+            e.stopPropagation();
+        }).on('click', 'ul>li', function() {
+            var parent = $(this).closest('.select');
+            parent.removeClass('is-open').find('.placeholder').text($(this).text());
+        });
+        
+        $('body').on('click', function() {
+            $('.select.is-open').removeClass('is-open');
+        });
+    </script>
+</body>
+</html>

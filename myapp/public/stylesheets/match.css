@@ -1,0 +1,113 @@
+#match-header{
+    height: 90px;
+    margin: 10px 0 50px 0;
+}
+#match-header img{
+    width: 150px;
+    height: 150px;
+    position: relative;
+    top: 0px;
+    left: 0;
+}
+#match-header span{
+    font-size: 25px;
+    position: relative;
+    top: 15px;
+    left: 0;
+    margin: 0 10px 0 10px;
+}
+#match-header .score{
+    position: relative;
+    top: 14px;
+    left: 0px;
+}
+#match-header p{
+    font-size: 26px;
+    color: #333333;
+}
+#display-compare-results{
+    height: 350px;
+    margin: 0 0 20px 0;
+}
+#display-compare-results li{
+    width: 100%;
+    height: 42px;
+    line-height: 42px;
+    margin: 10px 0 10px 0;
+    padding: 5px;
+}
+#display-compare-results img{
+    width: 200px;
+    height: 190px;
+    position: relative;
+    top: 85px;
+    left: -20px;
+    margin-bottom: 10px;
+}
+#display-compare-results p{
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+#display-compare-results a{
+    font-size: 20px;
+    /* margin: 10px 5px 0 5px; */
+}
+.strip{
+    width: 0%;
+    height: 100%;
+    background-color: #94c4f9;
+}
+.A-datas-display span{
+    font-weight: 700;
+    font-size: 18px;
+    margin-right: 5px;
+}
+.B-datas-display span{
+    font-weight: 700;
+    font-size: 18px;
+    margin-left: 5px;
+}
+.location-panel{
+    color: white;
+    margin: 10px 0 10px 0;
+    background: url('../images/bg.png') 0 -40px no-repeat;
+    padding: 2px 2px 2px 20px;
+}
+table thead{
+    background-color: rgba(57, 56, 54, .8);
+    color: white;
+}
+/*  */
+.team{
+    margin: 20px 0;
+}
+.team a{
+    width: 100px;
+}
+.match-player-card{
+    margin:10px 0; 
+}
+.match-player-card-panel{
+    position: relative;
+    bottom: 0px;
+}
+.match-player-card-panel ul li{
+    display: inline-block;
+}
+.match-player-card-panel img{
+    width: 120px;
+    height: 100px;
+}
+.match-player-card-panel .data-panel{
+    background-color: #032f4f;
+    color: white;
+    padding-bottom: 5px;
+}
+.data-panel .title{
+    width: 100%;
+    height: 45px;
+    padding: 2px;
+}
+.data-panel ul{
+    padding: 8px;
+}

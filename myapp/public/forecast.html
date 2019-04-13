@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>forecast</title>
+    <link rel="icon" href="./images/i.ico" type="img/x-ico" />
+    <link href="https://cdn.bootcss.com/normalize/8.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <link rel="stylesheet" href="./stylesheets/homePage.css">
+    <link rel="stylesheet" href="./stylesheets/forecast.css">
+    <link rel="stylesheet" href="./stylesheets/loading.css">
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.js"></script>
+</head>
+<body>
+    <div id="main-nav-area">
+        <!--nav-area-black-->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12" id="nav-area-black">
+                    <div id="user-panel">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        <span id="username" v-on:click="user_info">{{ username }}</span>
+                    </div>
+                    <div id="exit-panel">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true" v-on:click="exit"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="forecast">
+            <div v-show="!loading" class="container">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3">
+                        <div class="col-md-12 text-center">
+                            <img v-bind:src="'./images/teams_logo/' + home_name + '.png'" class="team-img">
+                            <span class="team-name-span">{{ home_name }}</span>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>技术统计</th>
+                                    <th>数值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>场均得分</td>
+                                    <td>{{ home_team_info.points }}</td>
+                                </tr>
+                                <tr>
+                                    <td>场均篮板</td>
+                                    <td>{{ home_team_info.rebounds }}</td>
+                                </tr>
+                                <tr>
+                                    <td>场均助攻</td>
+                                    <td>{{ home_team_info.assists }}</td>
+                                </tr>
+                                <tr>
+                                    <td>战绩排名</td>
+                                    <td>{{ home_team_info.rank }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-3">
+                        <div class="col-md-12 text-center">
+                                <span class="team-name-span">{{ opp_name }}</span>
+                                <img v-bind:src="'./images/teams_logo/' + opp_name + '.png'" class="team-img">
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-right">数值</th>
+                                    <th class="text-right">技术统计</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-right">{{ opp_team_info.points }}</td>
+                                    <td class="text-right">场均得分</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right">{{ opp_team_info.rebounds }}</td>
+                                    <td class="text-right">场均篮板</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right">{{ opp_team_info.assists }}</td>
+                                    <td class="text-right">场均助攻</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right">{{ opp_team_info.rank }}</td>
+                                    <td class="text-right">战绩排名</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h3>胜负预测</h3>
+                    </div>
+                    <div class="col-md-3 col-md-push-1 text-center">
+                        <h4>{{ home_forecast.forecastScore }}</h4>
+                    </div>
+                    <div class="col-md-2 col-md-push-2 text-center">
+                        <h4>:</h4>
+                    </div>
+                    <div class="col-md-3 col-md-push-3 text-center">
+                        <h4>{{ opp_forecast.forecastScore }}</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 col-md-push-1" style="padding: 0;">
+                        <div style="width: 100%;">
+                            <div id="home-progress" class="text-center" v-bind:style="{width: (home_forecast.winRate-0.01)*100+'%'}">
+                                {{ Math.round(home_forecast.winRate*100)+'%' }}
+                            </div>
+                            <div id="opp-progress" class="text-center" v-bind:style="{width: opp_forecast.winRate*100+'%'}">
+                                {{ Math.round(opp_forecast.winRate*100)+'%' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h3>交手战绩</h3>
+                    </div>
+                    <div class="col-md-10 col-md-push-1">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>类型</th>
+                                    <th>时间</th>
+                                    <th>主队</th>
+                                    <th>比分</th>
+                                    <th>客队</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="match in matches">
+                                    <td v-for="m in match">{{ m }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div v-show="loading" class="loading">
+                <div class="pic">
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                    <i></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./javascripts/forecast.js"></script>
+</body>
+</html>

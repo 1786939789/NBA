@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>team</title>
+    <link rel="icon" href="./images/i.ico" type="img/x-ico" />
+    <link href="https://cdn.bootcss.com/normalize/8.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <link rel="stylesheet" href="./stylesheets/index.css">
+    <link rel="stylesheet" href="./stylesheets/team.css">
+    <link rel="stylesheet" href="./stylesheets/loading.css">
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.1.0.rc2/echarts.js"></script>
+</head>
+<body>
+    <!-- main-nav-area -->
+    <div id="main-nav-area">
+        <!--nav-area-black-->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12" id="nav-area-black">
+                    <div id="user-panel">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        <span id="username" v-on:click="user_info">{{ username }}</span>
+                    </div>
+                    <div id="exit-panel">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true" v-on:click="exit"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- team-info -->
+    <div id="team-info">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12"><h3>{{ team_name }}</h3></div>
+                <div class="col-md-12" style="padding: 0px;">
+                    <div class="col-md-3" style="padding: 0px;">
+                        <div class="col-md-12 text-center" id="team_logo" style="padding: 0px;">
+                            <img v-bind:src="'./images/teams/'+ team_name + '.png'" alt="here is a logo">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <king-component :player="scores_king" :data="scores_king.scores" :type="'得分'"></king-component>
+                        <king-component :player="assists_king" :data="assists_king.assists" :type="'助攻'"></king-component>
+                        <king-component :player="rebounds_king" :data="rebounds_king.rebounds" :type="'篮板'"></king-component>
+                    </div>
+                    <!-- average -->
+                    <div class="col-md-4">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>技术统计</th>
+                                    <th>数值</th>
+                                    <th>联盟排名</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="t in team_average_info">
+                                    <td>{{ t.name }}</td>
+                                    <td>{{ t.data }}</td>
+                                    <td>{{ t.rank }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped table-hover">
+                        <thead style="background-color: #3d3d3d;">
+                            <tr>
+                                <th v-for="head in table_head">
+                                    <a @click="sort($event)" href="javascript:void(0);" style="color: white;">
+                                        {{ head }}
+                                    </a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="player in players">
+                                <td v-for="(p, index) in player" style="vertical-align: text-bottom;">
+                                    <a href="javascript:void(0);" v-if="index=='name'" @click="check_player($event)">
+                                        <img :src="'./images/small/'+ p + '.jpg'" class="player-img">
+                                        {{ p }}
+                                    </a>
+                                    {{ index=='name'?'':p }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="margin-top:20px;">
+                    <h4>2018至2019赛季{{ team_name }}队赛程</h4>
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr v-for="schedule in team_schedules" 
+                                :class="{'schedule-title': !schedule.status&&!schedule.date, 'schedule-head': !schedule.status&&schedule.date}">
+                                <td>{{ schedule.teams }}</td>
+                                <td>{{ schedule.points }}</td>
+                                <td>{{ schedule.result }}</td>
+                                <td>{{ schedule.date }}</td>
+                                <td>
+                                    <a @click="check_match($event)" href="javascript:void(0);">{{ schedule.status }}</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./javascripts/team.js"></script>
+</body>
+</html>
