@@ -3,6 +3,8 @@ var router = express.Router();
 var request = require('request');
 var cheerio = require('cheerio');
 var mysql = require('mysql');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 /* 队名中文英文转换 */
 var team_english = ['rockets','lakers','spurs','pelicans','mavericks','grizzlies','warriors','clippers',
                   'kings','suns','nuggets','thunder','blazers','jazz','timberwolves','raptors','76ers',
@@ -16,10 +18,17 @@ var client = mysql.createConnection({
   password: 'lihonghehe',
   database: 'myapp'
 });
-
+// cookie and session init
+router.use(cookieParser());
+router.use(session({
+  secret: 'zedd',
+  cookie: {maxAge: 60*1000*30},
+  resave: false,
+  saveUninitialized: true,
+}))
 /* GET home page. */
 router.get('/', function (req, res) {
-  res.render('index');
+  res.render('index', {status: 'not_login'});
 });
 /* GET team page */
 router.get('/team', function (req, res) {
@@ -32,6 +41,34 @@ router.get('/match', function (req, res) {
 /* GET player page */
 router.get('/player', function(req, res){
   res.render('player');
+});
+/* Login */
+router.post('/tab/login', function(req, res){
+  var id = req.body.id;
+  var password = req.body.password;
+  client.query('select * from user_info where tel=? or mail=?', [id, id], function(err, results){
+    if(err) 
+      res.send({status: 'error'});
+    if(results.length != 0 && results[0].password === password){
+      req.session.user = results[0];
+      res.send({status: 'ok', data: req.session.user});
+    }
+    else  
+      res.send({status: 'error'});
+  })
+});
+/* is_login */
+router.get('/tab/is_login', function(req, res){
+  if(req.session.user){
+    res.send({status: 'ok', data: req.session.user});
+  }else{
+    res.send({status: 'error'});
+  }
+});
+/* log_off */
+router.get('/tab/log_off', function(req, res){
+  req.session.user = null;
+  res.send({status: 'ok'});
 });
 /* GET schedule datas. */
 router.get('/tab/schedule', function (req, res) {

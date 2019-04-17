@@ -1,3 +1,37 @@
+var bus = new Vue();
+Vue.prototype.bus = bus;
+//nav-area-black
+var nav_area_black = new Vue({
+    el: '#nav-area-black',
+    data: {
+        username:  '',
+    },
+    created: function(){
+        var that = this;
+        // 是否登录
+        $.get('/tab/is_login', function(result){
+            if(result.status === 'ok')
+                that.username = result.data.username;
+        })
+    },
+    methods: {
+        user_info: function(){
+            if(this.username){
+
+            }else{//登录
+                $('#wrap').show();
+            }
+        },
+        exit: function () {
+            var that = this;
+            $.get('/tab/log_off', function(result){
+                if(result.status === 'ok'){
+                    location.reload();
+                }
+            })
+        }
+    }
+});
 // schedule
 Vue.component('schedule-component', {
     props: ['date', 'datas'],
@@ -336,5 +370,35 @@ var rank = new Vue({
                 that.team_west = results.team_rank.west;
             }
         });
+    }
+})
+// wrap
+var wrap = new Vue({
+    el: '#wrap',
+    data: {
+        id: '',
+        password: '',
+        id_error: true,
+        pass_error: true,
+    },
+    methods: {
+        login: function(){
+            $.post('/tab/login', {id: this.id, password: this.password}, function(result){
+                if(result.status === 'ok'){
+                    var storage = window.localStorage;
+                    // storage.setItem('username', result.data.username);
+                    $('#username').find('span').eq(1).text(result.data.username);
+                    $('#wrap').hide();
+                }else{
+                    this.password = '';
+                    alert('用户名或者密码错误！');
+                }
+            })
+        },
+        cancel: function(){
+            this.username = '';
+            this.password = '';
+            $('#wrap').hide();
+        }
     }
 })

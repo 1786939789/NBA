@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>HOME</title>
+    <title>Home</title>
     <link rel="icon" href="./images/i.ico" type="img/x-ico" />
     <link href="https://cdn.bootcss.com/normalize/8.0.0/normalize.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./bootstrap-3.3.7-dist/css/bootstrap.css">
@@ -22,8 +22,16 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12" id="nav-area-black">
+                    <div id="user-panel">
+                        <a href="javascript:void(0);" id="username" @click="user_info">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            <span >{{ username }}</span>
+                        </a>
+                    </div>
                     <div id="exit-panel">
-                        <span class="glyphicon glyphicon-off" aria-hidden="true" v-on:click="exit"></span>
+                        <a href="javascript:void(0);" @click="exit">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true" ></span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -255,9 +263,45 @@
     <!-- <div id="footer">
         <p>CopyRight 2019 JB51.Net Inc All Rights Reserved.李宏 版权所有</p>
     </div> -->
+    <div id="wrap">
+        <div>
+            <div class="login-box">		
+                <div class="login-title">登录</div>
+                <div class="login-form">
+                    <form id="form">
+                        <!--账户名-->
+                        <div class="form-item user">
+                            <div class="form-ctrl">
+                                <input type="text" v-model="id" @blur.prevent="id_error=id?true:false" placeholder="手机/邮箱">
+                            </div>
+                            <div class="form-tips">							
+                                <span class="error" v-show="!id_error">用户名不能为空</span>							
+                            </div>
+                        </div>
+                        <!--密码-->
+                        <div class="form-item pass">
+                            <div class="form-ctrl">
+                                <input type="password" v-model="password" @blur.prevent="pass_error=password?true:false" placeholder="请输入密码">
+                            </div>
+                            <div class="form-tips">                        	
+                                <span class="error" v-show="!pass_error">密码不能为空</span>                        	
+                            </div>
+                        </div>
+                        <!--登录按钮-->
+                        <div class="form-item form-button">
+                            <button type="button" class="btn btn-green block btn-login" @click.prevent="login">登录 </button>
+                        </div>
+                        <a href="javascript:void(0);" id="cancel" @click="cancel">取消</a>                                                            
+                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         var bus = new Vue();
         Vue.prototype.bus = bus;
+        var stat = status;
+        console.log(stat);
     </script>
     <script src="./javascripts/style.js"></script>
     <script src="./javascripts/index.js"></script>

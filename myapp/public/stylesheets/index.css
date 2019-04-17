@@ -27,8 +27,9 @@ body{
     top: 3px;
     right: 150px;
 }
-#nav-area-black #username{
+#nav-area-black #username, #exit-panel a{
     margin-left: 15px;
+    color: white;
 }
 #nav-area-black #exit-panel{
     position: absolute;
@@ -477,4 +478,100 @@ ul{
     color: #aaa;
     line-height: 30px;
     font-size: 16px;
+}
+/* wrap login-box */
+#wrap{
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 10001;
+    background: rgba(0, 0, 0, 0.5)
+}
+.login-box {
+    width: 470px;
+    padding: 0 0 35px 0;
+    color: #666;
+    border-radius: 4px;
+    background: rgb(245,245,245);
+    margin: 235px auto 175px auto;
+    position: relative;
+}
+.login-title {
+    width: 100%;
+    height: 62px;
+    line-height: 62px;
+    margin-bottom: 35px;
+    font-size: 22px;
+    font-weight: bolder;
+    color: #FFF;
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#e9580a), to(#dc3d0a));
+    background: -webkit-linear-gradient(top, #e9580a, #dc3d0a);
+    background: -moz-linear-gradient(top, #e9580a, #dc3d0a);
+    background: -o-linear-gradient(top, #e9580a, #dc3d0a);
+    background: -ms-linear-gradient(top, #e9580a, #dc3d0a);
+    background: linear-gradient(top, #e9580a, #dc3d0a);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType = 0, startColorstr = #e9580a, endColorstr = #dc3d0a);
+    text-align: center;
+}
+.login-form {
+    width: 330px;
+    margin-right: 52px;
+    /* margin-left: 38px; */
+    margin-left: 66px;
+}
+.user, .pass {
+    margin-bottom: 33px;
+}
+.form-item {
+    width: 100%;
+    height: 48px;
+    margin-bottom: 20px;
+    position: relative;
+}
+input:not([type=button]) {
+    height: 48px;
+    /* line-height: 22px; */
+    padding: 12px 20px;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+    /* color: #000; */
+    border: 1px solid #a5aaab;
+    border-radius: 3px;
+    outline: 0;
+    font-size: 16px;
+    background: #fff;
+}
+.form-tips {
+    width: 100%;
+    line-height: 16px;
+    font-size: 12px;
+    color: #e35b5a;
+    position: absolute;
+    top: 100%;
+}
+.form-button .btn, .btn a {
+    font-size: 22px;
+    padding: 6px 19px;
+    cursor: pointer;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    outline: 0;
+    font-family: "微软雅黑";
+}
+.form-button .btn-green {
+    color: #fff;
+    background: #e35004;
+    /* background: #006699; */
+}
+.btn a.block, .btn.block {
+    display: block;
+    width: 100%;
+}
+.login-box input{
+    width: 100%;
 }
