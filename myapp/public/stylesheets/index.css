@@ -5,9 +5,7 @@ body{
     background-color: white;
 }
 /* main-content */
-#main-content{
-    padding-bottom:90px;
-}
+
 /**/
 #nav-area-black{
     height: 50px;
@@ -152,17 +150,31 @@ ul{
     height: 190px;
     margin: 10px 0 10px 5px;
 }
-.star-card-panel ul li{
+.star-card-panel .star-info{
+    padding-left: 25px; 
+}
+.star-card-panel .star-info li{
     display: inline-block;
+    width: 72px;
     color: white;
-    margin: 7px 15px 5px 15px;
+    margin: 7px 0;
+    text-align: left;
+}
+.star-card-panel .star-info li:first-child{
+    width: 200px;
+    text-align: center;
+    font-size: 16px;
+}
+.star-card-panel .evaluate li{
+    display: inline-block;
+    margin: 7px 15px;
 }
 .wrap{
     position: absolute;
     left: 15px;
     top: 5px;
     width: 262.5px;
-    height: 420px;
+    height: 435px;
     background: gray;
     opacity: 0.5;
 }
@@ -489,6 +501,12 @@ ul{
     left: 0px;
     z-index: 10001;
     background: rgba(0, 0, 0, 0.5)
+}
+#cancel{
+    float: right;
+    margin-right: -35px;
+    font-weight: 400;
+    font-size: 16px;
 }
 .login-box {
     width: 470px;

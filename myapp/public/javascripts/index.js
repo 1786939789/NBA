@@ -25,9 +25,8 @@ var nav_area_black = new Vue({
         exit: function () {
             var that = this;
             $.get('/tab/log_off', function(result){
-                if(result.status === 'ok'){
-                    location.reload();
-                }
+                that.username = '';
+                $('#username span').eq(1).text('');
             })
         }
     }
@@ -117,6 +116,7 @@ var schedule = new Vue({
         $.get('/tab/schedule/', function(results){
             if(results.status == 'ok'){
                 that.schedules = results.schedules;
+                $('#loading').hide();
             }
         });
     },
@@ -139,7 +139,7 @@ Vue.component('star-card', {
                 </ul>
                 <img :src="'images/players/' + star.name + '.png'">
                 <div class="row">
-                    <ul class="col-md-12 text-center">
+                    <ul class="col-md-12 text-center star-info">
                         <li>{{ star.name }}</li><br>
                         <li><strong>得分</strong> {{ star.points }}</li>
                         <li><strong>助攻</strong> {{ star.assists }}</li>
@@ -156,7 +156,7 @@ Vue.component('star-card', {
                     </ul>
                 </div>
             </div>
-            <div class="wrap" v-if="star.own==0 && check==true">
+            <div class="wrap" v-if="!star.own && check==true">
             </div>
         </div>
     `,
@@ -173,7 +173,7 @@ var star_card = new Vue({
     },
     created: function(){
         var that = this;
-        $.get('/tab/get_star_card', 'order=' + 'stars_count', function(results){
+        $.get('/tab/get_star_card', 'order='+'stars_count&counts=36', function(results){
             if(results.status == 'ok'){
                 that.stars = results.datas;
             }
@@ -184,7 +184,7 @@ var star_card = new Vue({
             var that = this;
             var order = this.order_list[$(ev.target).text()];
             this.index = $(ev.target).parent('li').index();
-            $.get('/tab/get_star_card', 'order=' + order, function(results){
+            $.get('/tab/get_star_card', 'order='+order+'&counts=36', function(results){
                 if(results.status == 'ok'){
                     that.stars = results.datas;
                 }
@@ -210,22 +210,25 @@ var competition = new Vue({
         stars: [],
         stars_own: [],
         competition_content: [],
+        competition_points:{own: [], opp: []},
     },
     created: function(){
         var that = this;
-        $.get('/tab/get_star_card', 'order=' + 'stars_count', function(results){
+        $.get('/tab/get_star_card', 'order='+'stars_count&counts=500', function(results){
             if(results.status == 'ok'){
                 that.stars = results.datas;
                 for(var i=0; i<that.stars.length; ++i){
-                    that.stars[i].use = 0; //未使用
-                    if(that.stars[i].own == 1){
-                        that.stars_own.push(that.stars[i]);
-                    }
+                    that.stars[i].use = false;
                 }
+                that.star_opp = that.stars[that.get_random_num(0, that.stars.length-1)];
             }
-            that.star_own = that.stars_own[that.get_random_num(0, that.stars_own.length-1)];
-            that.star_opp = that.stars[that.get_random_num(0, that.stars.length-1)]
         });
+        $.get('/tab/get_own_star_card', function(results){
+            if(results.status == 'ok'){
+                that.stars_own = results.datas;
+                that.star_own = that.stars_own[that.get_random_num(0, that.stars_own.length-1)];
+            }
+        })
     },
     methods: {
         get_random_num: function(min, max){
@@ -283,24 +286,26 @@ var competition = new Vue({
                         if(that.is_success(that.star_own.mid_shots)){ //投篮成功
                             that.scores_own[that.sequence-1] += 2;
                             ++own.mid_hits;
-                            that.competition_content.push(that.star_own.name + ': 2');
+                            that.competition_content.unshift(that.star_own.name + ': 2');
                         }else{ //投篮失败
-                            that.competition_content.push(that.star_own.name + ': 投篮失败');
+                            that.competition_content.unshift(that.star_own.name + ': 投篮失败');
                         }
                     }else{ //远投
                         ++own.long_shots;//球星远投总个数
                         if(that.is_success(that.star_own.long_shots)){ //投篮成功
                             that.scores_own[that.sequence-1] += 3;
                             ++own.long_hits;
-                            that.competition_content.push(that.star_own.name + ': 3');
+                            that.competition_content.unshift(that.star_own.name + ': 3');
                         }else{ //投篮失败
-                            that.competition_content.push(that.star_own.name + ': 投篮失败');
+                            that.competition_content.unshift(that.star_own.name + ': 投篮失败');
                         }
                     }
                 }else{
                     that.competition_content.push(that.star_own.name + ': 投篮失败');
                     ++opp.defend;
                 }
+                that.competition_points.own.unshift(that.scores_own[0]+that.scores_own[1]+that.scores_own[2]+that.scores_own[3]);
+                that.competition_points.opp.unshift(that.scores_opp[0]+that.scores_opp[1]+that.scores_opp[2]+that.scores_opp[3]);
             }, 100);
             var timer_opp = setInterval(function(){
                 // 客队
@@ -314,8 +319,8 @@ var competition = new Vue({
                         that.star_opp = that.get_opp_star();
                         for(var i=0; i<that.stars_own.length; ++i){
                             if(that.star_own.name == that.stars_own[i].name){
-                                that.star_own.use = 1;
-                                that.stars_own[i].use = 1;
+                                that.star_own.use = true;
+                                that.stars_own[i].use = true;
                             }
                         }
                     }
@@ -333,24 +338,26 @@ var competition = new Vue({
                         if(that.is_success(that.star_opp.mid_shots)){ //投篮成功
                             that.scores_opp[that.sequence-1] += 2;
                             ++opp.mid_hits;
-                            that.competition_content.push(that.star_opp.name + ': 2');
+                            that.competition_content.unshift(that.star_opp.name + ': 2');
                         }else{ //投篮失败
-                            that.competition_content.push(that.star_opp.name + ': 投篮失败');
+                            that.competition_content.unshift(that.star_opp.name + ': 投篮失败');
                         }
                     }else{ //远投
                         ++opp.long_shots;
                         if(that.is_success(that.star_opp.long_shots)){ //投篮成功
                             that.scores_opp[that.sequence-1] += 3;
                             ++opp.long_hits;
-                            that.competition_content.push(that.star_opp.name + ': 3');
+                            that.competition_content.unshift(that.star_opp.name + ': 3');
                         }else{ //投篮失败
-                            that.competition_content.push(that.star_opp.name + ': 投篮失败');
+                            that.competition_content.unshift(that.star_opp.name + ': 投篮失败');
                         }
                     }
                 }else{
                     ++own.defend;
-                    that.competition_content.push(that.star_opp.name + ': 投篮失败');
+                    that.competition_content.unshift(that.star_opp.name + ': 投篮失败');
                 }
+                that.competition_points.own.unshift(that.scores_own[0]+that.scores_own[1]+that.scores_own[2]+that.scores_own[3]);
+                that.competition_points.opp.unshift(that.scores_opp[0]+that.scores_opp[1]+that.scores_opp[2]+that.scores_opp[3]);
             }, 100);
         }
     }
@@ -370,6 +377,15 @@ var rank = new Vue({
                 that.team_west = results.team_rank.west;
             }
         });
+    },
+    methods: {
+        check_match: function(check_team_name){
+            var check_team_name_english = team_chinese_to_english[check_team_name];
+            var storage = window.localStorage;
+            storage.setItem('check_team_name', check_team_name);
+            storage.setItem('check_team_name_english', check_team_name_english);
+            window.open(window.location.href+'team'); 
+        }
     }
 })
 // wrap
@@ -383,14 +399,17 @@ var wrap = new Vue({
     },
     methods: {
         login: function(){
+            var that = this;
             $.post('/tab/login', {id: this.id, password: this.password}, function(result){
                 if(result.status === 'ok'){
                     var storage = window.localStorage;
                     // storage.setItem('username', result.data.username);
                     $('#username').find('span').eq(1).text(result.data.username);
                     $('#wrap').hide();
+                    that.password = '';
+                    location.reload();
                 }else{
-                    this.password = '';
+                    that.password = '';
                     alert('用户名或者密码错误！');
                 }
             })

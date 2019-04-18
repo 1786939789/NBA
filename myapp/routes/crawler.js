@@ -19,8 +19,8 @@ var client = mysql.createConnection({
     database:'myapp'
 });
 var baseUrl = '';
-/* GET crawler listing. */
-router.get('/schedule', function(req, res, next) {
+/* GET crawler listing. -----delete */
+router.get('/delete/schedule', function(req, res, next) {
     request('http://tiyu.baidu.com/match/NBA/tab/%E8%B5%9B%E7%A8%8B', function(error, response, body) {
         if (!error && response.statusCode == 200) {
             $ = cheerio.load(body);
@@ -55,6 +55,35 @@ router.get('/schedule', function(req, res, next) {
         }
     });
 });
+/* GET schedule */
+router.get('/schedule', function (req, res) {
+    request('http://tiyu.baidu.com/match/NBA/tab/%E8%B5%9B%E7%A8%8B', function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        $ = cheerio.load(body);
+        var schedules = [];
+        // 爬取数据
+        $('.wa-match-schedule-list-wrapper').each(function (i, elem) {
+          var date = $(this).find('.wa-match-schedule-list-title').eq(0).text().split(' ')[1];
+          $(this).find('.wa-match-schedule-list-item').each(function () {
+            home_name = $(this).find('.wa-tiyu-schedule-item-name').eq(0).text();
+            away_name = $(this).find('.wa-tiyu-schedule-item-name').eq(1).text();
+            type = $(this).find('.match-name').eq(0).text();
+            time = $(this).find('.status-text').eq(0).text();
+            time = time==='集锦回放'?'已结束':'time';
+            vs = $(this).find('.vs-line').eq(0).text();
+            var sql = 'insert into schedule values(?, ?, ?, ?, ?, ?)';
+            client.query(sql, [date, home_name, away_name, type, time, vs], function(err, results){
+                if(err) throw err;
+            });
+          });
+        });
+        res.send({
+          status: 'ok',
+          schedules: schedules
+        });
+      }
+    });
+});
 router.get('/team', function(req, res){
     request('https://nba.hupu.com/teams/rockets', function(error, response, body){
         if(!error && response.statusCode == 200){
@@ -78,7 +107,7 @@ router.get('/team', function(req, res){
         }
     });
 });
-/* GET Player data */
+/* GET Player data ----- delete */
 router.get('/players/data', function(req, res){
     for(var i=1; i <= 6; ++i){
         request('https://nba.hupu.com/stats/players/pts/' + i, function(error, response, body){

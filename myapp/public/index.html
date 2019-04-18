@@ -178,13 +178,11 @@
                             <div class="col-md-12">
                                 <div class="competition-panel">
                                     <ul>
-                                        <li v-for="c in competition_content" class="clearfix">
+                                        <li class="clearfix" v-for="(c, index) in competition_content" v-bind:key="index">
                                             <div class="part">{{ '第' + sequence + '节' }}</div>
                                             {{ c }}
                                             <div class="scores-show">
-                                                {{ (scores_own[0]+scores_own[1]+scores_own[2]+scores_own[3])
-                                                    +'-'+(scores_opp[0]+scores_opp[1]+scores_opp[2]+scores_opp[3]) 
-                                                }}
+                                                {{ competition_points.own[index]+'-'+competition_points.opp[index] }}
                                             </div>
                                         </li>
                                     </ul>
@@ -237,8 +235,11 @@
                             <tr v-for="(team,i) in team_east" 
                                 :style="{backgroundColor: team[0]=='排名'?'#032f4f':'white', color: team[0]=='排名'?'white':'black'}">
                                 <td v-for="(t, j) in team" :class="{rankEastBg: j==0 && i>0 && i<=9}">
-                                    <img :src="'images/teams_logo/'+team[j]+'.png'" v-if="j==1 && i>0" class="team-logo">
-                                    {{ t }}
+                                    <a href="javascript:void(0);" v-if="j==1 && i>0" @click="check_match(t)">
+                                        <img :src="'images/teams_logo/'+team[j]+'.png'" class="team-logo">
+                                        <span style="color: black;">{{ t }}</span>
+                                    </a>
+                                    <span v-else>{{ t }}</span>
                                 </td>
                             </tr>
                         </table>
@@ -250,13 +251,25 @@
                             <tr v-for="(team,i) in team_west"
                                 :style="{backgroundColor: team[0]=='排名'?'#032f4f':'white', color: team[0]=='排名'?'white':'black'}">
                                 <td v-for="(t, j) in team" :class="{rankWestBg: j==0 && i>0 && i<=9}">
-                                    <img :src="'images/teams_logo/'+team[j]+'.png'" v-if="j==1 && i>0" class="team-logo">
-                                    {{ t }}
+                                    <a href="javascript:void(0);" v-if="j==1 && i>0" @click="check_match(t)">
+                                        <img :src="'images/teams_logo/'+team[j]+'.png'" class="team-logo">
+                                        <span style="color: black;">{{ t }}</span>
+                                    </a>
+                                    <span v-else>{{ t }}</span>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div id="loading" class="loading">
+            <div class="pic">
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
             </div>
         </div>
     </div>
@@ -291,7 +304,7 @@
                         <div class="form-item form-button">
                             <button type="button" class="btn btn-green block btn-login" @click.prevent="login">登录 </button>
                         </div>
-                        <a href="javascript:void(0);" id="cancel" @click="cancel">取消</a>                                                            
+                        <a href="javascript:void(0);" id="cancel" @click="cancel">返回</a>                                                            
                      </form>
                 </div>
             </div>

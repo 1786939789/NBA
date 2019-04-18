@@ -88,6 +88,7 @@ router.get('/tab/schedule', function (req, res) {
           temp.away_name = $(this).find('.wa-tiyu-schedule-item-name').eq(1).text();
           temp.type = $(this).find('.match-name').eq(0).text();
           temp.time = $(this).find('.status-text').eq(0).text();
+          temp.time = temp.time=='集锦回放'?'已结束':temp.time;
           temp.vs = $(this).find('.vs-line').eq(0).text();
           obj.datas.push(temp);
         });
@@ -239,7 +240,7 @@ router.get('/tab/match', function (req, res) {
     }
   });
 });
-/* 获取每项数据最大值并计算 */
+/* 获取每项数据最大值并计算------删 */ 
 router.get('/star_card', function (req, res) {
   var max = {};
   // sql函数max处理
@@ -354,26 +355,43 @@ router.get('/star_card', function (req, res) {
 /* 获取球星卡 */
 router.get('/tab/get_star_card', function (req, res) {
   var order = req.query.order;
-  client.query('select * from all_star_card order by ' + order + ' desc, points desc', function (err, results) {
-    if (err) {
+  var counts = req.query.counts?req.query.counts:36;
+  var username = req.session.user?req.session.user.username:'';
+  client.query('select * from all_star_card order by '+order+' desc, points desc limit '+counts, function (err, results) {
+    if(err) {
       res.send({status: 'error'});
-    } else {
-      var sql = 'select * from own_star_card where username=?';
-      client.query(sql, ['leehom'], function(err, results_user){
-        if(results_user){
+    }else if(counts > 36){
+      res.send({status: 'ok', datas: results});
+    }else{
+      var sql = 'select * from own_star_card where username = ?';
+      client.query(sql, [username], function(err, results_own){
+        if(!err){
           for(var i=0; i<results.length; ++i){
-            results[i].own = 0;
-            for(var j=0; j<results_user.length; ++j){
-              if(results[i].name == results_user[j].star_name){
-                results[i].own = 1;
+            results[i].own = false;
+            for(var j=0; j<results_own.length; ++j){
+              if(results[i].name == results_own[j].star_name){
+                results[i].own = true;
               }
             }
           }
-          res.send({status: 'ok', datas: results});
+        res.send({status: 'ok', datas: results});
         }
-        
       });
     }
+  });
+});
+/* 获取个人球星卡 */
+router.get('/tab/get_own_star_card', function(req, res){
+  var username = req.session.user?req.session.user.username:'';
+  var sql = 'select * from own_star_card, all_star_card where own_star_card.username=? and own_star_card.star_name=all_star_card.name';
+  client.query(sql, [username], function(err, results){
+    if(!err){
+      for(var i=0; i<results.length; ++i){
+        results[i].use = false;
+      }
+      res.send({status: 'ok', datas: results});
+    }
+    
   });
 });
 /* 获取球员个人数据 */
