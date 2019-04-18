@@ -56,6 +56,7 @@ var team = new Vue({
                 that.players = results.players;
                 that.team_schedules= results.team_schedules;
                 that.sort_by_method('得分');
+                $('#loading').hide();
             }
         });
     },

@@ -42,16 +42,37 @@ router.get('/match', function (req, res) {
 router.get('/player', function(req, res){
   res.render('player');
 });
+/* submit user info */
+router.post('/tab/submit_user_info', function(req, res){
+  var id = get_random_index();
+  var sql = 'insert into user_info values(?,?,?,?,?,?,?)';
+  var params = [id, req.body.username, req.body.sex, req.body.tel, req.body.mail, req.body.favorite_team, req.body.password];
+  client.query(sql, params, function(err, results){
+    if(err){ //更新
+      sql = 'update user_info set username=?,sex=?,mail=?,favorite_team=?,password=?';
+      params = [req.body.username, req.body.sex, req.body.mail, req.body.favorite_team, req.body.password];
+      client.query(sql, params, function(err, results){
+        if(err){
+          res.send({status: 'ok'});
+        }else{
+          res.send({status: 'ok'});
+        }
+      })
+    }else{
+      res.send({status: 'ok'});
+    }
+  });
+});
 /* Login */
 router.post('/tab/login', function(req, res){
-  var id = req.body.id;
+  var tel = req.body.tel;
   var password = req.body.password;
-  client.query('select * from user_info where tel=? or mail=?', [id, id], function(err, results){
+  client.query('select * from user_info where tel=?', [tel], function(err, results){
     if(err) 
       res.send({status: 'error'});
     if(results.length != 0 && results[0].password === password){
-      req.session.user = results[0];
-      res.send({status: 'ok', data: req.session.user});
+      req.session.user_info = results[0];
+      res.send({status: 'ok', data: req.session.user_info});
     }
     else  
       res.send({status: 'error'});
@@ -59,15 +80,15 @@ router.post('/tab/login', function(req, res){
 });
 /* is_login */
 router.get('/tab/is_login', function(req, res){
-  if(req.session.user){
-    res.send({status: 'ok', data: req.session.user});
+  if(req.session.user_info){
+    res.send({status: 'ok', data: req.session.user_info});
   }else{
     res.send({status: 'error'});
   }
 });
 /* log_off */
 router.get('/tab/log_off', function(req, res){
-  req.session.user = null;
+  req.session.user_info = null;
   res.send({status: 'ok'});
 });
 /* GET schedule datas. */
@@ -564,5 +585,17 @@ function get_late_four_day() {
 /* 根据月份和日组合成如 01-23 */
 function combine_month_day(month, day) {
   return (month < 9 ? '0' + (month + 1) : (month + 1)) + '-' + day;
+}
+// 生成用户id
+function get_random_index() {
+  var date = new Date().getTime();
+  var random = Math.ceil(Math.random()*23)*Math.ceil(Math.random()*37) * Number(date);
+  var list = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; //共62个
+  var index ='';
+  while (random){
+      index += list.charAt(random%62);
+      random = Math.floor(random/10);
+  }
+  return index;
 }
 module.exports = router;

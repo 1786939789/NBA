@@ -9,24 +9,24 @@ var nav_area_black = new Vue({
     created: function(){
         var that = this;
         // 是否登录
-        $.get('/tab/is_login', function(result){
-            if(result.status === 'ok')
-                that.username = result.data.username;
+        $.get('/tab/is_login', function(results){
+            if(results.status === 'ok'){
+                that.username = results.data.username;
+                wrap.user_info = results.data;
+                wrap.login_status = true;
+            }
         })
     },
     methods: {
         user_info: function(){
-            if(this.username){
-
-            }else{//登录
-                $('#wrap').show();
-            }
+            $('#wrap').show();
         },
         exit: function () {
             var that = this;
             $.get('/tab/log_off', function(result){
                 that.username = '';
                 $('#username span').eq(1).text('');
+                location.reload();
             })
         }
     }
@@ -392,32 +392,61 @@ var rank = new Vue({
 var wrap = new Vue({
     el: '#wrap',
     data: {
-        id: '',
-        password: '',
-        id_error: true,
-        pass_error: true,
+        login_status: false,
+        login_info:{
+            tel: '',
+            password: '',
+        },
+        user_info:{
+            username: '',
+            sex: '',
+            tel: '',
+            mail: '',
+            favorite_team: '',
+            password: '',
+        }
     },
     methods: {
         login: function(){
             var that = this;
-            $.post('/tab/login', {id: this.id, password: this.password}, function(result){
+            if(!that.login_info.tel || !that.login_info.password){
+                alert('请正确填写手机和密码');
+                return;
+            }
+            $.post('/tab/login', {tel: that.login_info.tel, password: that.login_info.password}, function(result){
                 if(result.status === 'ok'){
-                    var storage = window.localStorage;
-                    // storage.setItem('username', result.data.username);
                     $('#username').find('span').eq(1).text(result.data.username);
                     $('#wrap').hide();
-                    that.password = '';
                     location.reload();
+
                 }else{
-                    that.password = '';
-                    alert('用户名或者密码错误！');
+                    that.login_info.password = '';
+                    alert('手机或者密码错误！');
                 }
             })
         },
         cancel: function(){
-            this.username = '';
-            this.password = '';
             $('#wrap').hide();
+        },
+        submit: function(){
+            var that = this;
+            if(!that.user_info.username || !that.user_info.tel || !that.user_info.password){
+                alert('昵称、手机、密码必填');
+                return;
+            }
+            var data = {
+                username: that.user_info.username,
+                sex: that.user_info.sex,
+                tel: that.user_info.tel,
+                mail: that.user_info.mail,
+                favorite_team: that.user_info.favorite_team,
+                password: that.user_info.password
+            }
+            $.post('/tab/submit_user_info', data, function(results){
+                if(results.status === 'ok'){
+                    $('#wrap').hide();
+                }
+            })
         }
     }
 })

@@ -502,94 +502,92 @@ ul{
     z-index: 10001;
     background: rgba(0, 0, 0, 0.5)
 }
-#cancel{
-    float: right;
-    margin-right: -35px;
-    font-weight: 400;
-    font-size: 16px;
+.sign-box{
+    width: 700px;
+    height: 370px;
+    margin: 200px auto;
+    background-color: white;
+    font-family: "microsoft yahei";
 }
-.login-box {
-    width: 470px;
-    padding: 0 0 35px 0;
-    color: #666;
-    border-radius: 4px;
-    background: rgb(245,245,245);
-    margin: 235px auto 175px auto;
-    position: relative;
+.login-box{
+    width: 500px;
+    height: 300px;
+    margin: 200px auto;
+    background-color: white;
+    font-family: "microsoft yahei";
 }
-.login-title {
+.sign-title, .login-title{
     width: 100%;
-    height: 62px;
-    line-height: 62px;
-    margin-bottom: 35px;
-    font-size: 22px;
-    font-weight: bolder;
-    color: #FFF;
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#e9580a), to(#dc3d0a));
-    background: -webkit-linear-gradient(top, #e9580a, #dc3d0a);
-    background: -moz-linear-gradient(top, #e9580a, #dc3d0a);
-    background: -o-linear-gradient(top, #e9580a, #dc3d0a);
-    background: -ms-linear-gradient(top, #e9580a, #dc3d0a);
-    background: linear-gradient(top, #e9580a, #dc3d0a);
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType = 0, startColorstr = #e9580a, endColorstr = #dc3d0a);
+    height: 50px;
+    line-height: 50px;
+    background-color: #00c190;
+    color: white;
+    font-weight: 300;
+    font-size: 18px;
+    padding: 2px 20px;
+}
+.sign-title span:last-child{
+    position: absolute;
+    top: 215px;
+    left: 1225px;
+    font-size: 20px;
+    color: white;
+}
+.login-title span:last-child{
+    position: absolute;
+    top: 215px;
+    left: 1125px;
+    font-size: 20px;
+    color: white;
+}
+.sign-content, .login-content{
+    padding: 20px;
+    position: absolute;
+}
+.sign-content label, .login-content label{
+    font-size: 14px;
+    color: #566875;
+    text-align: left;
+    text-indent: 1px;
+    margin-left: 35px;
+}
+.sign-content input[type="text"], .login-content input[type="text"]{
+    width: 200px;
+    height: 35px;
+    margin: 15px 5px;
+    border-radius: 2px;
+    border: 1px solid #d4dbe0;
+    text-indent: 0.5em;
+    font-size: 12px;
+    color: #566875;
+}
+.login-content input[type="text"]{
+    width: 345px;
+    height: 35px;
+}
+.radio-group{
+    display: inline-block;
+}
+.radio-group li{
+    display: inline-block;
+    width: 90px;
+    height: 35px;
+    line-height: 35px;
     text-align: center;
 }
-.login-form {
-    width: 330px;
-    margin-right: 52px;
-    /* margin-left: 38px; */
-    margin-left: 66px;
-}
-.user, .pass {
-    margin-bottom: 33px;
-}
-.form-item {
-    width: 100%;
-    height: 48px;
-    margin-bottom: 20px;
+.radio-group li input[type="radio"]{
     position: relative;
+    top: -3px;
+    left: 0px;
 }
-input:not([type=button]) {
-    height: 48px;
-    /* line-height: 22px; */
-    padding: 12px 20px;
-    -webkit-transition: all .2s;
-    transition: all .2s;
-    /* color: #000; */
-    border: 1px solid #a5aaab;
-    border-radius: 3px;
-    outline: 0;
-    font-size: 16px;
-    background: #fff;
-}
-.form-tips {
+.submit-box{
     width: 100%;
-    line-height: 16px;
-    font-size: 12px;
-    color: #e35b5a;
-    position: absolute;
-    top: 100%;
+    height: 100%;
+    text-align: center;
+    padding: 20px;
 }
-.form-button .btn, .btn a {
-    font-size: 22px;
-    padding: 6px 19px;
-    cursor: pointer;
-    -webkit-transition: all .2s;
-    transition: all .2s;
-    border: 1px solid transparent;
-    border-radius: 2px;
-    outline: 0;
-    font-family: "微软雅黑";
-}
-.form-button .btn-green {
-    color: #fff;
-    background: #e35004;
-    /* background: #006699; */
-}
-.btn a.block, .btn.block {
-    display: block;
-    width: 100%;
-}
-.login-box input{
-    width: 100%;
+.sign-box input[type="submit"], .login-box input[type="submit"]{
+    width: 250px;
+    height: 35px;
+    background-color: #00c190;
 }

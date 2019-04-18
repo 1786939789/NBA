@@ -263,51 +263,74 @@
                 </div>
             </div>
         </div>
-        <div id="loading" class="loading">
-            <div class="pic">
-                <i></i>
-                <i></i>
-                <i></i>
-                <i></i>
-                <i></i>
+    </div>
+    <div id="wrap">
+        <div class="login-box" v-if="!login_status">
+            <div class="login-title">
+                <span>登录-获取你的球球卡</span>
+                <a href="javascript:void(0);" @click="cancel">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="login-content">
+                <form action="">
+                    <label for="">手机</label>
+                    <input type="text" v-model="login_info.tel">
+                    <br>
+                    <label for="">密码</label>
+                    <input type="text" v-model="login_info.password">
+                    <div class="submit-box">
+                        <input type="submit" class="btn btn-info" value="登录" @click.prevent="login">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="sign-box" v-else>
+            <div class="sign-title">
+                <span>编辑你的信息</span>
+                <a href="javascript:void(0);" @click="cancel">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="sign-content">
+                <form action="">
+                    <label for="">你的昵称</label>
+                    <input type="text" v-model="user_info.username">
+                    <label for="">你的性别</label>
+                    <ul class="radio-group">
+                        <li>
+                            <label for="">男</label>
+                            <input type="radio" name="sex" v-model="user_info.sex" value="男">
+                        </li>
+                        <li>
+                            <label for="">女</label>
+                            <input type="radio" name="sex" v-model="user_info.sex" value="女">
+                        </li>
+                    </ul>
+                    <br>
+                    <label for="">电话号码</label>
+                    <input type="text" v-model="user_info.tel">
+                    <label for="">邮箱地址</label>
+                    <input type="text" v-model="user_info.mail">
+                    <br>
+                    <label for="">你的主队</label>
+                    <input type="text" v-model="user_info.favorite_team">
+                    <label for="">你的密码</label>
+                    <input type="text" v-model="user_info.password">
+                    <div class="submit-box">
+                        <input type="submit" class="btn btn-info" value="提交" @click.prevent="submit">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    <!-- <div id="footer">
-        <p>CopyRight 2019 JB51.Net Inc All Rights Reserved.李宏 版权所有</p>
-    </div> -->
-    <div id="wrap">
-        <div>
-            <div class="login-box">		
-                <div class="login-title">登录</div>
-                <div class="login-form">
-                    <form id="form">
-                        <!--账户名-->
-                        <div class="form-item user">
-                            <div class="form-ctrl">
-                                <input type="text" v-model="id" @blur.prevent="id_error=id?true:false" placeholder="手机/邮箱">
-                            </div>
-                            <div class="form-tips">							
-                                <span class="error" v-show="!id_error">用户名不能为空</span>							
-                            </div>
-                        </div>
-                        <!--密码-->
-                        <div class="form-item pass">
-                            <div class="form-ctrl">
-                                <input type="password" v-model="password" @blur.prevent="pass_error=password?true:false" placeholder="请输入密码">
-                            </div>
-                            <div class="form-tips">                        	
-                                <span class="error" v-show="!pass_error">密码不能为空</span>                        	
-                            </div>
-                        </div>
-                        <!--登录按钮-->
-                        <div class="form-item form-button">
-                            <button type="button" class="btn btn-green block btn-login" @click.prevent="login">登录 </button>
-                        </div>
-                        <a href="javascript:void(0);" id="cancel" @click="cancel">返回</a>                                                            
-                     </form>
-                </div>
-            </div>
+    <div id="loading" class="loading">
+        <div class="pic">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
         </div>
     </div>
     <script>

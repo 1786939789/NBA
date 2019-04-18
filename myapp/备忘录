@@ -3,3 +3,6 @@
 远投：同上
 防守：（ 抢断 / max + 盖帽 / max ）/ 2 × 100
 
+/* 新增表 */
+1.用户信息表 user
+user_id  username  password  tel

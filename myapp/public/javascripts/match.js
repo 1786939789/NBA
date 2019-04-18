@@ -174,6 +174,7 @@ var match = new Vue({
                         }
                     }
                 } 
+                $('#loading').hide();
             }
         });
     },

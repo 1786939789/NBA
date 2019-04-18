@@ -38,6 +38,7 @@ var player = new Vue({
                 if(second == -1)
                     that.player_data_career_regular = results.player_data_career.slice(first, results.player_data_career.length);
             }
+            $('#loading').hide();
         });
     },
     methods: {
