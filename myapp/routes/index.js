@@ -99,26 +99,47 @@ router.post('/tab/submit_user_info', function(req, res){
 router.post('/tab/login', function(req, res){
   var tel = req.body.tel;
   var password = req.body.password;
-  var ip = req.body.ip;
-  var loc = req. body.loc;
+  var ip = req.body.ip; //ip地址
+  var loc = req. body.loc; //登录地
   var sql = 'select * from user_info where tel=?';
   client.query(sql, [tel], function(err, results){
     if(err) 
       res.send({status: 'error'});
-    if(results.length != 0 && results[0].password === password){
-      req.session.user_info = results[0];
+    if(results.length != 0 && results[0].password === password){ //验证成功
+      req.session.user_info = results[0]; //存入session
       var today = new Date();
-      var time = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' '
-                +   today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-      sql = 'insert into login_info values(?, ?, ?, ?)';
-      client.query(sql, [time, req.session.user_info.user_id, ip, loc], function(err){
+      var date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate(); //登录日期
+      var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(); //登录时间
+      sql = 'insert into login_info values(?, ?, ?, ?, ?)';
+      client.query(sql, [date, time, req.session.user_info.user_id, ip, loc], function(err){ //记录登录信息
         if(!err){
-          res.send({status: 'ok', data: req.session.user_info});
+          sql = 'select count(*) from login_info where date=? and user_id=?'
+          client.query(sql, [date, req.session.user_info.user_id], function(err, results){ //检查今日是否第一次登陆
+            if(!err && results[0]['count(*)'] == 1){ //第一次登录获取球星卡
+              sql = 'select name from all_star_card';
+              client.query(sql, function(err, results){ //获取球星
+                var star_name = results[Math.floor(Math.random()*results.length)]['name'];
+                client.query(sql, function(err, results){ //保存球星
+                  if(!err){
+                    sql = 'insert into own_star_card values(?, ?)';
+                    client.query(sql, [req.session.user_info.user_id, star_name], function(err){
+                      if(err) throw err;
+                    });
+                  }
+                });
+              });
+            }
+            res.send({status: 'ok', data: req.session.user_info});
+          });
+          
+        }else{
+          res.send({status: 'error'});
         }
       });
     }
-    else  
+    else{  
       res.send({status: 'error'});
+    }
   })
 });
 /* is_login */
@@ -421,15 +442,15 @@ router.get('/star_card', function (req, res) {
 router.get('/tab/get_star_card', function (req, res) {
   var order = req.query.order;
   var counts = req.query.counts?req.query.counts:36;
-  var username = req.session.user?req.session.user.username:'';
+  var user_id = req.session.user_info?req.session.user_info.user_id:'';
   client.query('select * from all_star_card order by '+order+' desc, points desc limit '+counts, function (err, results) {
     if(err) {
       res.send({status: 'error'});
     }else if(counts > 36){
       res.send({status: 'ok', datas: results});
     }else{
-      var sql = 'select * from own_star_card where username = ?';
-      client.query(sql, [username], function(err, results_own){
+      var sql = 'select * from own_star_card where user_id = ?';
+      client.query(sql, [user_id], function(err, results_own){
         if(!err){
           for(var i=0; i<results.length; ++i){
             results[i].own = false;

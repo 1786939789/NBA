@@ -8,3 +8,6 @@
 user_id  username  sex  tel  mail  favorite_team  password
 2.登录信息表 login_info
 time  user_id  login_ip  login_loc
+/* 修改表 */
+1.个人球星表 own_star_card
+username=>user_id  star_name
