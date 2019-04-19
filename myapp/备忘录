@@ -4,5 +4,7 @@
 防守：（ 抢断 / max + 盖帽 / max ）/ 2 × 100
 
 /* 新增表 */
-1.用户信息表 user
-user_id  username  password  tel
+1.用户信息表 user_info
+user_id  username  sex  tel  mail  favorite_team  password
+2.登录信息表 login_info
+time  user_id  login_ip  login_loc

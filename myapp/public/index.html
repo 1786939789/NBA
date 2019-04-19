@@ -278,10 +278,11 @@
                     <input type="text" v-model="login_info.tel">
                     <br>
                     <label for="">密码</label>
-                    <input type="text" v-model="login_info.password">
+                    <input type="password" v-model="login_info.password">
                     <div class="submit-box">
                         <input type="submit" class="btn btn-info" value="登录" @click.prevent="login">
                     </div>
+                    <a href="javascript:void(0);" @click="login_status=true" id="reg">注册</a>
                 </form>
             </div>
         </div>
@@ -338,6 +339,9 @@
         Vue.prototype.bus = bus;
         var stat = status;
         console.log(stat);
+    </script>
+    <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script> 
+    <script>
     </script>
     <script src="./javascripts/style.js"></script>
     <script src="./javascripts/index.js"></script>

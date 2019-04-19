@@ -10,7 +10,39 @@ var team_english = ['rockets','lakers','spurs','pelicans','mavericks','grizzlies
                   'kings','suns','nuggets','thunder','blazers','jazz','timberwolves','raptors','76ers',
                   'celtics','nets','knicks','heat','hornets','wizards','magic','hawks','bucks','pacers',
                   'pistons','bulls','cavaliers'];
-
+/* 队名中文英文转换 */
+var team_chinese_to_english = {
+  '火箭': 'rockets',
+  '湖人': 'lakers',
+  '马刺': 'spurs',
+  '鹈鹕': 'pelicans',
+  '独行侠': 'mavericks',
+  '灰熊': 'grizzlies',
+  '勇士': 'warriors',
+  '快船': 'clippers',
+  '国王': 'kings',
+  '太阳': 'suns',
+  '掘金': 'nuggets',
+  '雷霆': 'thunder',
+  '开拓者': 'blazers',
+  '爵士': 'jazz',
+  '森林狼': 'timberwolves',
+  '猛龙': 'raptors',
+  '76人': '76ers',
+  '凯尔特人': 'celtics',
+  '篮网': 'nets',
+  '尼克斯': 'knicks',
+  '热火': 'heat',
+  '黄蜂': 'hornets',
+  '奇才': 'wizards',
+  '魔术': 'magic',
+  '老鹰': 'hawks',
+  '雄鹿': 'bucks',
+  '步行者': 'pacers',
+  '活塞': 'pistons',
+  '公牛': 'bulls',
+  '骑士': 'cavaliers',
+}
 //mysql数据库连接
 var client = mysql.createConnection({
   host: 'localhost',
@@ -67,12 +99,23 @@ router.post('/tab/submit_user_info', function(req, res){
 router.post('/tab/login', function(req, res){
   var tel = req.body.tel;
   var password = req.body.password;
-  client.query('select * from user_info where tel=?', [tel], function(err, results){
+  var ip = req.body.ip;
+  var loc = req. body.loc;
+  var sql = 'select * from user_info where tel=?';
+  client.query(sql, [tel], function(err, results){
     if(err) 
       res.send({status: 'error'});
     if(results.length != 0 && results[0].password === password){
       req.session.user_info = results[0];
-      res.send({status: 'ok', data: req.session.user_info});
+      var today = new Date();
+      var time = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' '
+                +   today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+      sql = 'insert into login_info values(?, ?, ?, ?)';
+      client.query(sql, [time, req.session.user_info.user_id, ip, loc], function(err){
+        if(!err){
+          res.send({status: 'ok', data: req.session.user_info});
+        }
+      });
     }
     else  
       res.send({status: 'error'});
@@ -189,15 +232,16 @@ router.get('/tab/match', function (req, res) {
   var away_name = req.query.away_name;
   var schedule_date = req.query.schedule_date;
   var check_team_name_english = req.query.check_team_name_english;
-  var base_url = schedule_date ? 'https://nba.hupu.com/schedule/' + check_team_name_english : 'https://nba.hupu.com/schedule';
+  var base_url = schedule_date.length>5 ? 'https://nba.hupu.com/schedule/' + check_team_name_english : 'https://nba.hupu.com/schedule';
   request(base_url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       $ = cheerio.load(body);
       $('td a').each(function (i, elem) {
         if ($(this).text() == '数据直播' || $(this).text() == '数据统计' || $(this).text() == '比赛前瞻') {
-          var contition1 = $(this).parent().prev('td').find('a').eq(0).text() == home_name && $(this).parent().prev('td').find('a').eq(1).text() == away_name;
-          var contition2 = $(this).parent().prev('td').text().replace(/\n/g, '') == schedule_date;
-          if (contition1 || contition2) {
+          var condition1 = $(this).parent().prev('td').find('a').eq(0).text() == home_name && $(this).parent().prev('td').find('a').eq(1).text() == away_name;
+          var condition2 = isScheduleDate($(this).parent().parent().prev('tr.linglei').children('td').text(), schedule_date);
+          var condition3 = $(this).parent().prev('td').text().replace(/\n/g, '') == schedule_date;
+          if ((condition1 && condition2) || condition3) {
             var url = $(this).attr('href');
             request(url, function (error, response, body) {
               $ = cheerio.load(body);
@@ -403,9 +447,9 @@ router.get('/tab/get_star_card', function (req, res) {
 });
 /* 获取个人球星卡 */
 router.get('/tab/get_own_star_card', function(req, res){
-  var username = req.session.user?req.session.user.username:'';
-  var sql = 'select * from own_star_card, all_star_card where own_star_card.username=? and own_star_card.star_name=all_star_card.name';
-  client.query(sql, [username], function(err, results){
+  var user_id = req.session.user_info?req.session.user_info.user_id:'';
+  var sql = 'select * from own_star_card, all_star_card where own_star_card.user_id=? and own_star_card.star_name=all_star_card.name';
+  client.query(sql, [user_id], function(err, results){
     if(!err){
       for(var i=0; i<results.length; ++i){
         results[i].use = false;
@@ -597,5 +641,15 @@ function get_random_index() {
       random = Math.floor(random/10);
   }
   return index;
+}
+// 是否要求比赛日期
+function isScheduleDate(date1, date2){
+  var array = date2.split('-');
+  for(var i=0; i<array.length; ++i){
+    if(date1.indexOf(array[i]) == -1){
+      return false;
+    }
+  }
+  return true;
 }
 module.exports = router;

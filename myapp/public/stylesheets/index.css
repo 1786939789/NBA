@@ -551,7 +551,7 @@ ul{
     text-indent: 1px;
     margin-left: 35px;
 }
-.sign-content input[type="text"], .login-content input[type="text"]{
+.sign-content input[type="text"], .login-content input[type="text"], .login-content input[type="password"]{
     width: 200px;
     height: 35px;
     margin: 15px 5px;
@@ -561,7 +561,7 @@ ul{
     font-size: 12px;
     color: #566875;
 }
-.login-content input[type="text"]{
+.login-content input[type="text"], .login-content input[type="password"]{
     width: 345px;
     height: 35px;
 }
@@ -590,4 +590,13 @@ ul{
     width: 250px;
     height: 35px;
     background-color: #00c190;
+}
+#reg{
+    position: relative;
+    top: -10px;
+    left: 415px;
+    font-size: 14px;
+    color: #566875;
+    text-align: left;
+    text-indent: 1px;
 }

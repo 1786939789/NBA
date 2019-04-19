@@ -67,7 +67,7 @@ Vue.component('schedule-component', {
                             </div>
                         </div>
                         <div class="col-md-2 text-center">
-                            <a href="javascript: void(0);" @click="check_match($event)"><h4>查看</h4></a>
+                            <a href="javascript: void(0);" @click="check_match($event, date)"><h4>查看</h4></a>
                         </div>
                     </div>
                 </li>
@@ -87,13 +87,13 @@ Vue.component('schedule-component', {
             storage.setItem('check_team_name_english', check_team_name_english);
             window.open(window.location.href+'team'); 
         },
-        check_match: function(ev){
+        check_match: function(ev, date){
             var home_name = $(ev.target).parent().parent().parent().find('.col-md-5').eq(0).text().replace(/(^\s*)|(\s*$)/g, "");
             var away_name = $(ev.target).parent().parent().parent().find('.col-md-5').eq(1).text().replace(/(^\s*)|(\s*$)/g, "");
             var storage = window.localStorage;
             storage.setItem('home_name', home_name);
             storage.setItem('away_name', away_name);
-            storage.setItem('schedule_date', '');
+            storage.setItem('schedule_date', date);
             window.open(window.location.href + 'match');
         }
     }
@@ -413,7 +413,13 @@ var wrap = new Vue({
                 alert('请正确填写手机和密码');
                 return;
             }
-            $.post('/tab/login', {tel: that.login_info.tel, password: that.login_info.password}, function(result){
+            var data = {
+                tel: that.login_info.tel, 
+                password: that.login_info.password, 
+                ip:returnCitySN.cip, 
+                loc: returnCitySN.cname
+            }
+            $.post('/tab/login', data, function(result){
                 if(result.status === 'ok'){
                     $('#username').find('span').eq(1).text(result.data.username);
                     $('#wrap').hide();
