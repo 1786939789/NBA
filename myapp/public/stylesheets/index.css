@@ -14,13 +14,14 @@ body{
 }
 #nav-area-black div{
     height: 50px;
-    width: 120px;
+    width: 130px;
     line-height: 50px;
     text-align: center;
     color: white;
-    font-size: 18px;
+    font-size: 16px;
 }
 #nav-area-black #user-panel{
+    width: 170px;
     position: absolute;
     top: 3px;
     right: 150px;

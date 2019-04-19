@@ -27,7 +27,7 @@ Vue.component('king-component',{
     template: `
         <div class="col-md-4 text-center" style="padding-top: 15px;">
             <h5>{{ type + '王'}}</h5>
-            <img :src="'./images/small/'+player.name+'.jpg'">
+            <img :src="'./images/small/'+player.name+'.jpg'" onerror="javascript:this.src='/images/small/default_player.jpg';">
             <h5>{{ player.name }}</h5>
             <h5>{{ type + ':' + data }}</h5>
         </div>

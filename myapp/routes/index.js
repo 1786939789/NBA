@@ -81,8 +81,8 @@ router.post('/tab/submit_user_info', function(req, res){
   var params = [id, req.body.username, req.body.sex, req.body.tel, req.body.mail, req.body.favorite_team, req.body.password];
   client.query(sql, params, function(err, results){
     if(err){ //更新
-      sql = 'update user_info set username=?,sex=?,mail=?,favorite_team=?,password=?';
-      params = [req.body.username, req.body.sex, req.body.mail, req.body.favorite_team, req.body.password];
+      sql = 'update user_info set username=?,sex=?,mail=?,favorite_team=?,password=? where tel=?';
+      params = [req.body.username, req.body.sex, req.body.mail, req.body.favorite_team, req.body.password, req.body.tel];
       client.query(sql, params, function(err, results){
         if(err){
           res.send({status: 'ok'});
@@ -260,7 +260,7 @@ router.get('/tab/match', function (req, res) {
       $('td a').each(function (i, elem) {
         if ($(this).text() == '数据直播' || $(this).text() == '数据统计' || $(this).text() == '比赛前瞻') {
           var condition1 = $(this).parent().prev('td').find('a').eq(0).text() == home_name && $(this).parent().prev('td').find('a').eq(1).text() == away_name;
-          var condition2 = isScheduleDate($(this).parent().parent().prev('tr.linglei').children('td').text(), schedule_date);
+          var condition2 = isScheduleDate($(this).parent().parent().prevAll('tr.linglei').eq(0).children('td').text(), schedule_date);
           var condition3 = $(this).parent().prev('td').text().replace(/\n/g, '') == schedule_date;
           if ((condition1 && condition2) || condition3) {
             var url = $(this).attr('href');

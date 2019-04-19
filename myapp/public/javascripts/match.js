@@ -71,7 +71,7 @@ Vue.component('match-player-card',{
     template: `
         <div class="col-md-2 match-player-card">
             <div class="match-player-card-panel text-center " @mouseenter="check($event)" @mouseleave="close($event)">
-                <img :src="'/images/players/'+ player.name +'.png'">
+                <img :src="'/images/players/'+ player.name +'.png'" onerror="javascript:this.src='/images/players/default_player.png';">
                 <div class="data-panel">
                     <div class="title" :style="{paddingTop: player.name.length>9?'2px': '15px'}">
                         <p>{{ player.name }}</p>

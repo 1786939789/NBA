@@ -11,3 +11,7 @@ time  user_id  login_ip  login_loc
 /* 修改表 */
 1.个人球星表 own_star_card
 username=>user_id  star_name
+
+存在问题
+1.注册后无法登录，需要刷新才会弹出登录页面 ----ok
+2.赛程除了每日第一条都无法访问

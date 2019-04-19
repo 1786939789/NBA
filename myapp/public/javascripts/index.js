@@ -437,7 +437,11 @@ var wrap = new Vue({
         submit: function(){
             var that = this;
             if(!that.user_info.username || !that.user_info.tel || !that.user_info.password){
-                alert('昵称、手机、密码必填');
+                alert('昵称、手机、密码必填！');
+                return;
+            }
+            if(that.user_info.username.length > 8){
+                alert('昵称在8个字符内！');
                 return;
             }
             var data = {
@@ -450,9 +454,22 @@ var wrap = new Vue({
             }
             $.post('/tab/submit_user_info', data, function(results){
                 if(results.status === 'ok'){
-                    $('#wrap').hide();
+                    if(nav_area_black.username){
+                        $('#wrap').hide();
+                    }else{
+                        that.login_info.tel = that.user_info.tel;
+                        that.login_info.password = that.user_info.password;
+                        that.login_status = false;that.login_info.tel = that.user_info.tel;
+                        that.login_info.password = that.user_info.password;
+                        that.login_status = false;
+                    }
                 }
             })
+        },
+        register: function(){
+            this.login_status=true
+            this.login_info.tel = '';
+            this.login_info.password = '';
         }
     }
 })

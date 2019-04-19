@@ -23,13 +23,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12" id="nav-area-black">
-                    <div id="user-panel">
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                        <span id="username" v-on:click="user_info">{{ username }}</span>
-                    </div>
-                    <div id="exit-panel">
-                        <span class="glyphicon glyphicon-off" aria-hidden="true" v-on:click="exit"></span>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -87,7 +81,7 @@
                             <tr v-for="player in players">
                                 <td v-for="(p, index) in player" style="vertical-align: text-bottom;">
                                     <a href="javascript:void(0);" v-if="index=='name'" @click="check_player($event)">
-                                        <img :src="'./images/small/'+ p + '.jpg'" class="player-img">
+                                        <img :src="'./images/small/'+ p + '.jpg'" class="player-img" onerror="javascript:this.src='/images/small/default_player.jpg';">
                                         {{ p }}
                                     </a>
                                     {{ index=='name'?'':p }}
