@@ -131,7 +131,7 @@
                 <div class="row">
                     <div class="col-md-5">
                         <div class="col-md-3 star-data-panel" v-for="s in stars_competition_own">
-                            <img :src="'images/small/'+s.name+'.jpg'"><br>
+                            <img :src="'images/small/'+s.name+'.jpg'" onerror="javascript:this.src='images/small/default_player.jpg';"><br>
                             <span>得分：{{ s.scores }}</span><br>
                             <span>中投：{{ s.mid_hits + '/' + s.mid_shots }}</span><br>
                             <span>远投：{{ s.long_hits + '/' + s.long_shots }}</span><br>
@@ -161,7 +161,7 @@
                     </div>
                     <div class="col-md-5">
                         <div class="col-md-3 star-data-panel" v-for="s in stars_competition_opp">
-                            <img :src="'images/small/'+s.name+'.jpg'"><br>
+                            <img :src="'images/small/'+s.name+'.jpg'" onerror="javascript:this.src='images/small/default_player.jpg';"><br>
                             <span>得分：{{ s.scores }}</span><br>
                             <span>中投：{{ s.mid_hits + '/' + s.mid_shots }}</span><br>
                             <span>远投：{{ s.long_hits + '/' + s.long_shots }}</span><br>

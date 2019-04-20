@@ -137,7 +137,7 @@ Vue.component('star-card', {
                     <li><span class="glyphicon glyphicon-star" aria-hidden="true" :class="{light: star.stars_count>3}"></span></li>
                     <li><span class="glyphicon glyphicon-star" aria-hidden="true" :class="{light: star.stars_count>4}"></span></li>
                 </ul>
-                <img :src="'images/players/' + star.name + '.png'">
+                <img :src="'images/players/' + star.name + '.png'" onerror="javascript:this.src='/images/players/default_player.png';">
                 <div class="row">
                     <ul class="col-md-12 text-center star-info">
                         <li>{{ star.name }}</li><br>
