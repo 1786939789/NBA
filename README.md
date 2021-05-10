@@ -1,3 +1,2 @@
 # NBA
-a NBA data analysis
-vue.js + node.js
+a NBA data analysis Web
